@@ -1,5 +1,6 @@
 package com.digger.guideview.widget.model;
 
+import android.graphics.Rect;
 import android.graphics.RectF;
 
 import androidx.annotation.IntDef;
@@ -17,17 +18,17 @@ public class HeightLightRectVo {
     private int shape;
     private String tip;
     private int direction;
-    private RectF rectF;
+    private Rect rect;
 
-    public HeightLightRectVo() {
+    private HeightLightRectVo() {
 
     }
 
-    public HeightLightRectVo(@HeightLightShape int shape, String tip, int direction, RectF rectF) {
+    public HeightLightRectVo(@HeightLightShape int shape, String tip, int direction, Rect rect) {
         this.shape = shape;
         this.tip = tip;
         this.direction = direction;
-        this.rectF = rectF;
+        this.rect = rect;
     }
 
     public int getShape() {
@@ -42,8 +43,8 @@ public class HeightLightRectVo {
         return direction;
     }
 
-    public RectF getRectF() {
-        return rectF;
+    public Rect getRect() {
+        return rect;
     }
 
     @IntDef({HeightLightShape.RECT, HeightLightShape.CIRCLE, HeightLightShape.OVAL})

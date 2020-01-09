@@ -29,13 +29,19 @@
         android:layout_gravity="center_vertical|left"
         android:text="Left"/>
 
-    <Button
-        android:id="@+id/btnRight"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
-        android:layout_gravity="center_vertical|right"
-        android:text="Right"/>
+        android:layout_gravity="center_vertical|right">
+
+        <Button
+            android:id="@+id/btnRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Right"/>
+
+    </LinearLayout>
 
     <Button
         android:layout_width="wrap_content"

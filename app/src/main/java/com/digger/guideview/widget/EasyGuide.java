@@ -1,6 +1,7 @@
 package com.digger.guideview.widget;
 
 import android.app.Activity;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.Gravity;
 import android.view.View;
@@ -143,17 +144,27 @@ public class EasyGuide {
         }
     }
 
-    private RectF getDrawRect(View view) {
-        RectF rectF = new RectF();
+    private Rect getDrawRect(View view) {
+        Rect result = new Rect();
+        Rect tempRect = new Rect();
 
-        rectF.set(
-                view.getLeft() - HEIGHT_LIGHT_PADDING,
-                view.getTop() - HEIGHT_LIGHT_PADDING,
-                view.getRight() + HEIGHT_LIGHT_PADDING,
-                view.getBottom() + HEIGHT_LIGHT_PADDING
-        );
+        View temp = view;
 
-        return rectF;
+        while(temp != mParent) {
+            temp.getHitRect(tempRect);
+
+            result.left += tempRect.left;
+            result.top += tempRect.top;
+
+            temp = (View) temp.getParent();
+        }
+
+        result.right = result.left + view.getMeasuredWidth() + HEIGHT_LIGHT_PADDING;
+        result.bottom = result.top + view.getMeasuredHeight() + HEIGHT_LIGHT_PADDING;
+        result.left = result.left - HEIGHT_LIGHT_PADDING;
+        result.top = result.top - HEIGHT_LIGHT_PADDING;
+
+        return result;
     }
 
     private void bindGuidView(List<HeightLightRectVo> heightLightItems, boolean isShowTogether) {

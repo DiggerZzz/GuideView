@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -45,17 +46,17 @@ public class GuideView extends FrameLayout implements View.OnClickListener {
     private int heightLightIndex;
 
     public GuideView(@NonNull Context context) {
-        super(context);
-
-        init();
+        this(context, null);
     }
 
     private GuideView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     private GuideView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        init();
     }
 
     @Override
@@ -121,18 +122,19 @@ public class GuideView extends FrameLayout implements View.OnClickListener {
     private void drawHeightLight(HeightLightRectVo rectVo, Canvas canvas) {
         switch(rectVo.getShape()) {
             case HeightLightRectVo.HeightLightShape.RECT:
-                canvas.drawRect(rectVo.getRectF(), mPaint);
+                canvas.drawRect(rectVo.getRect(), mPaint);
                 break;
             case HeightLightRectVo.HeightLightShape.CIRCLE:
-                int width = (int) (rectVo.getRectF().right - rectVo.getRectF().left);
-                int height = (int) (rectVo.getRectF().bottom - rectVo.getRectF().top);
-                int cx = (int) (rectVo.getRectF().left + width / 2);
-                int cy = (int) (rectVo.getRectF().top + height / 2);
+                int width = rectVo.getRect().right - rectVo.getRect().left;
+                int height = rectVo.getRect().bottom - rectVo.getRect().top;
+                int cx = rectVo.getRect().left + width / 2;
+                int cy = rectVo.getRect().top + height / 2;
                 int radius = Math.max(width, height) / 2;
                 canvas.drawCircle(cx, cy, radius, mPaint);
                 break;
             case HeightLightRectVo.HeightLightShape.OVAL:
-                canvas.drawOval(rectVo.getRectF(), mPaint);
+                RectF rectF = new RectF(rectVo.getRect());
+                canvas.drawOval(rectF, mPaint);
                 break;
         }
     }
@@ -187,7 +189,7 @@ public class GuideView extends FrameLayout implements View.OnClickListener {
                 MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         );
 
-        RectF rectF = rectVo.getRectF();
+        Rect rect = rectVo.getRect();
         int width = tipView.getMeasuredWidth();
         int height = tipView.getMeasuredHeight();
         int topMargin = 0;
@@ -195,36 +197,36 @@ public class GuideView extends FrameLayout implements View.OnClickListener {
 
         switch(rectVo.getDirection()) {
             case HeightLightRectVo.HeightLightTipDirection.TOP:
-                topMargin = (int) (rectF.top - height - TIP_MARGIN);
-                leftMargin = (int) (rectF.left + (rectF.right - rectF.left - width) / 2);
+                topMargin = rect.top - height - TIP_MARGIN;
+                leftMargin = rect.left + (rect.right - rect.left - width) / 2;
                 break;
             case HeightLightRectVo.HeightLightTipDirection.BOTTOM:
-                topMargin = (int) (rectF.bottom + TIP_MARGIN);
-                leftMargin = (int) (rectF.left + (rectF.right - rectF.left - width) / 2);
+                topMargin = rect.bottom + TIP_MARGIN;
+                leftMargin = rect.left + (rect.right - rect.left - width) / 2;
                 break;
             case HeightLightRectVo.HeightLightTipDirection.LEFT:
-                topMargin = (int) (rectF.top + (rectF.bottom - rectF.top - height) / 2);
-                leftMargin = (int) (rectF.left - width - TIP_MARGIN);
+                topMargin = rect.top + (rect.bottom - rect.top - height) / 2;
+                leftMargin = rect.left - width - TIP_MARGIN;
                 break;
             case HeightLightRectVo.HeightLightTipDirection.RIGHT:
-                topMargin = (int) (rectF.top + (rectF.bottom - rectF.top - height) / 2);
-                leftMargin = (int) (rectF.right + TIP_MARGIN);
+                topMargin = rect.top + (rect.bottom - rect.top - height) / 2;
+                leftMargin = rect.right + TIP_MARGIN;
                 break;
             case HeightLightRectVo.HeightLightTipDirection.TOP_LEFT:
-                topMargin = (int) (rectF.top - height - TIP_MARGIN);
-                leftMargin = (int) (rectF.left - width - TIP_MARGIN);
+                topMargin = rect.top - height - TIP_MARGIN;
+                leftMargin = rect.left - width - TIP_MARGIN;
                 break;
             case HeightLightRectVo.HeightLightTipDirection.TOP_RIGHT:
-                topMargin = (int) (rectF.top - height - TIP_MARGIN);
-                leftMargin = (int) (rectF.right + TIP_MARGIN);
+                topMargin = rect.top - height - TIP_MARGIN;
+                leftMargin = rect.right + TIP_MARGIN;
                 break;
             case HeightLightRectVo.HeightLightTipDirection.BOTTOM_LEFT:
-                topMargin = (int) (rectF.bottom + TIP_MARGIN);
-                leftMargin = (int) (rectF.left - width - TIP_MARGIN);
+                topMargin = rect.bottom + TIP_MARGIN;
+                leftMargin = rect.left - width - TIP_MARGIN;
                 break;
             case HeightLightRectVo.HeightLightTipDirection.BOTTOM_RIGHT:
-                topMargin = (int) (rectF.bottom + TIP_MARGIN);
-                leftMargin = (int) (rectF.right + TIP_MARGIN);
+                topMargin = rect.bottom + TIP_MARGIN;
+                leftMargin = rect.right + TIP_MARGIN;
                 break;
         }
 
